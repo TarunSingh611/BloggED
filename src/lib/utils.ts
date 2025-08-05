@@ -29,11 +29,8 @@ export function formatDate(date: Date | string): string {
 }
 
 export function formatContent(content: string): string {
-  // First, handle inline code blocks (single backticks)
-  content = content.replace(/`([^`]+)`/g, '<code>$1</code>\n')
-  
-  // Handle multi-line code blocks (triple backticks)
-  content = content.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>\n')
+  // Handle multi-line code blocks (triple backticks) first
+  content = content.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
   
   // Split content into paragraphs
   const paragraphs = content.split('\n\n').filter(p => p.trim())
@@ -80,13 +77,16 @@ export function formatContent(content: string): string {
       return formatTable(trimmed)
     }
     
+    // Handle inline code blocks (single backticks) within the paragraph
+    let processedContent = trimmed.replace(/`([^`]+)`/g, '<code>$1</code>')
+    
     // Regular paragraph - split by sentences for better readability
-    const sentences = trimmed.split(/(?<=[.!?])\s+/).filter(s => s.trim())
+    const sentences = processedContent.split(/(?<=[.!?])\s+/).filter(s => s.trim())
     if (sentences.length > 1) {
       return sentences.map(sentence => `<p>${sentence.trim()}</p>`).join('')
     }
     
-    return `<p>${trimmed}</p>`
+    return `<p>${processedContent}</p>`
   })
   
   // Group list items into lists
