@@ -1,129 +1,118 @@
 'use client';
 
-import { BlogPost as BlogPostType } from '@/type/blog';
-import { MotionDiv } from '@/components/motion';
-import Image from 'next/image';
-import { formatDate } from '@/lib/utils';
-import { MDXRemote } from 'next-mdx-remote';
-import { serialize } from 'next-mdx-remote/serialize';
-import { useEffect, useState } from 'react';
-import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
+import Link from 'next/link'
+import { format } from 'date-fns'
+import { MotionDiv } from '@/components/motion'
 
 interface BlogPostProps {
-  post: BlogPostType;
+  post: {
+    id: string
+    title: string
+    description?: string
+    excerpt?: string
+    coverImage?: string
+    tags?: string[]
+    published: boolean
+    featured?: boolean
+    createdAt: string
+    updatedAt: string
+    views: number
+    author?: {
+      id: string
+      name?: string
+      image?: string
+    }
+  }
 }
 
-export function BlogPost({ post }: BlogPostProps) {
-  const [mdxContent, setMdxContent] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function prepareMDX() {
-      try {
-        // First, ensure the content is a string
-        const contentString = typeof post?.content === 'string' 
-          ? post.content 
-          : String(post?.content || '');
-
-        // Serialize with proper options and plugins
-        const mdxSource = await serialize(contentString, {
-          mdxOptions: {
-            remarkPlugins: [remarkGfm],
-            rehypePlugins: [rehypeHighlight],
-            format: 'mdx',
-          },
-          parseFrontmatter: true,
-        });
-
-        setMdxContent(mdxSource);
-        setError(null);
-      } catch (err) {
-        console.error('MDX Processing Error:', err);
-        setError('Failed to process content');
-        // Fallback to raw content display
-        setMdxContent({ compiledSource: post?.content || '' });
-      }
-    }
-
-    prepareMDX();
-  }, [post?.content]);
-
-  // Render loading state
-  if (!post) {
-    return <div>Loading...</div>;
-  }
-
+export default function BlogPost({ post }: BlogPostProps) {
   return (
-    <article className="container mx-auto px-4 py-8 max-w-4xl">
-      <MotionDiv
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-          {post.description && (
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-4">
-              {post.description}
-            </p>
+    <MotionDiv
+      whileHover={{ y: -5 }}
+      className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+    >
+      {post.coverImage && (
+        <div className="relative h-48 overflow-hidden">
+          <img
+            src={post.coverImage}
+            alt={post.title}
+            className="w-full h-full object-cover"
+          />
+          {post.featured && (
+            <div className="absolute top-4 left-4">
+              <span className="bg-indigo-600 text-white px-2 py-1 rounded-full text-xs font-medium">
+                Featured
+              </span>
+            </div>
           )}
-          <div className="flex items-center justify-between text-gray-500 dark:text-gray-400">
-            <div className="flex items-center space-x-4">
-              {post.author.image && (
-                <Image
-                  src={post.author.image}
-                  alt={post.author.name}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-              )}
-              <div>
-                <p className="font-medium">{post.author.name}</p>
-                <p>{formatDate(post.createdAt)}</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span>{post.views} views</span>
-            </div>
+        </div>
+      )}
+      
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-2">
+            {post.author?.image && (
+              <img
+                src={post.author.image}
+                alt={post.author.name || 'Author'}
+                className="w-8 h-8 rounded-full"
+              />
+            )}
+            <span className="text-sm text-gray-600">
+              {post.author?.name || 'Anonymous'}
+            </span>
           </div>
-        </header>
+          <span className="text-sm text-gray-500">
+            {format(new Date(post.createdAt), 'MMM dd, yyyy')}
+          </span>
+        </div>
 
-        {post.coverImage && (
-          <MotionDiv
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="relative h-[400px] w-full mb-8 rounded-lg overflow-hidden"
-          >
-            <Image
-              src={post.coverImage}
-              alt={post.title}
-              fill
-              className="object-cover"
-            />
-          </MotionDiv>
+        <h3 className="text-xl font-semibold mb-2 text-gray-900 line-clamp-2">
+          {post.title}
+        </h3>
+        
+        {post.description && (
+          <p className="text-gray-600 mb-3 line-clamp-3">
+            {post.description}
+          </p>
         )}
 
-        <MotionDiv
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="prose dark:prose-invert max-w-none"
-        >
-          {error ? (
-            // Fallback content display
-            <div className="whitespace-pre-wrap">
-              {post.content}
-            </div>
-          ) : mdxContent ? (
-            <MDXRemote {...mdxContent} />
-          ) : (
-            <div>Loading content...</div>
-          )}
-        </MotionDiv>
-      </MotionDiv>
-    </article>
-  );
+        {post.excerpt && !post.description && (
+          <p className="text-gray-600 mb-3 line-clamp-3">
+            {post.excerpt}
+          </p>
+        )}
+
+        {post.tags && post.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {post.tags.slice(0, 3).map((tag, index) => (
+              <span
+                key={index}
+                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
+              >
+                {tag}
+              </span>
+            ))}
+            {post.tags.length > 3 && (
+              <span className="text-xs text-gray-500">
+                +{post.tags.length - 3} more
+              </span>
+            )}
+          </div>
+        )}
+
+        <div className="flex items-center justify-between">
+          <Link
+            href={`/blog/${post.id}`}
+            className="text-indigo-600 font-medium hover:text-indigo-500 transition-colors"
+          >
+            Read More →
+          </Link>
+          <div className="flex items-center space-x-4 text-sm text-gray-500">
+            <span>{post.views} views</span>
+          </div>
+        </div>
+      </div>
+    </MotionDiv>
+  )
 }

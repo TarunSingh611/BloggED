@@ -1,24 +1,26 @@
 // components/Footer.tsx
+'use client'
+
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { MotionA, MotionDiv } from './motion'
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-gray-900 dark:bg-gray-950 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand Section */}
-          <div className="col-span-1 md:col-span-2">
+          <div className="col-span-1 md:col-span-1">
             <MotionDiv
               whileHover={{ scale: 1.05 }}
               className="text-2xl font-bold text-indigo-400 mb-4"
             >
               BloggED
             </MotionDiv>
-            <p className="text-gray-400 mb-4">
+            <p className="text-gray-400 mb-4 leading-relaxed">
               Discover amazing stories and insights from our community of writers
-              and thinkers.
+              and thinkers. Share your knowledge and connect with like-minded people.
             </p>
             <div className="flex space-x-4">
               {/* Social Media Links */}
@@ -27,7 +29,8 @@ export default function Footer() {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white"
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Twitter"
               >
                 <svg
                   className="h-6 w-6"
@@ -42,7 +45,8 @@ export default function Footer() {
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white"
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="GitHub"
               >
                 <svg
                   className="h-6 w-6"
@@ -56,69 +60,73 @@ export default function Footer() {
                   />
                 </svg>
               </MotionA>
+              <MotionA
+                whileHover={{ y: -3 }}
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="LinkedIn"
+              >
+                <svg
+                  className="h-6 w-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </MotionA>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-semibold mb-4 text-white">Quick Links</h3>
+            <ul className="space-y-3">
               <li>
                 <Link
                   href="/blog"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center"
                 >
+                  <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                  </svg>
                   Blog
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/about"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  href="/dashboard"
+                  className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center"
                 >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Contact
+                  <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  Dashboard
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Categories */}
+          {/* Newsletter */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Categories</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/category/technology"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Technology
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/category/lifestyle"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Lifestyle
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/category/business"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Business
-                </Link>
-              </li>
-            </ul>
+            <h3 className="text-lg font-semibold mb-4 text-white">Stay Updated</h3>
+            <p className="text-gray-400 mb-4">
+              Get the latest stories and insights delivered to your inbox.
+            </p>
+            <form className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+              <button
+                type="submit"
+                className="btn-primary px-6 py-2 text-sm"
+              >
+                Subscribe
+              </button>
+            </form>
           </div>
         </div>
 
@@ -126,18 +134,18 @@ export default function Footer() {
         <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} BlogSite. All rights reserved.
+              © {new Date().getFullYear()} BloggED. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link
                 href="/privacy"
-                className="text-gray-400 hover:text-white text-sm"
+                className="text-gray-400 hover:text-white text-sm transition-colors"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/terms"
-                className="text-gray-400 hover:text-white text-sm"
+                className="text-gray-400 hover:text-white text-sm transition-colors"
               >
                 Terms of Service
               </Link>

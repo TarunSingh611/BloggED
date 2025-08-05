@@ -1,6 +1,7 @@
 // app/layout.tsx
 import { Inter } from 'next/font/google'
 import { Toaster } from 'react-hot-toast'
+import Providers from '@/components/Providers'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import './globals.css'
@@ -15,14 +16,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-grow min-h-screen">
-            {children}
-          </main>
-          <Footer />
-        </div>
-        <Toaster />
+        <Providers>
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <main className="flex-grow min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </div>
+          <Toaster />
+        </Providers>
       </body>
     </html>
   )

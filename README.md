@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blogged - Modern Blog Platform
+
+A modern blog platform built with Next.js, Prisma, and Tailwind CSS. Features a beautiful dashboard for content management, user authentication, and a responsive blog frontend.
+
+## Features
+
+- ✨ **Modern Design** - Beautiful, responsive design with dark mode support
+- 📝 **Rich Content Editor** - Create and edit posts with HTML formatting
+- 🔐 **User Authentication** - Secure login with NextAuth.js
+- 📊 **Dashboard** - Manage all your posts from a central dashboard
+- 🎨 **Customizable** - Easy to customize with Tailwind CSS
+- 📱 **Mobile Responsive** - Works perfectly on all devices
+- ⚡ **Fast Performance** - Built with Next.js for optimal performance
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js 18+ 
+- MongoDB database
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd blogged
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   Create a `.env.local` file in the root directory:
+   ```env
+   DATABASE_URL="mongodb://localhost:27017/blogged"
+   NEXTAUTH_URL="http://localhost:3000"
+   NEXTAUTH_SECRET="your-secret-key-here"
+   ```
+
+4. **Set up the database**
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+5. **Seed the database with demo data**
+   ```bash
+   npm run seed
+   ```
+
+6. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+7. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+### Demo Credentials
+
+After running the seed script, you can sign in with:
+- **Email:** admin@example.com
+- **Password:** password
+
+## Dashboard Features
+
+### View Posts
+- Click on any post in the dashboard to view it
+- Use the "View" button to see the published version
+- Filter posts by status (All, Published, Drafts)
+
+### Create New Posts
+- Navigate to `/dashboard/create`
+- Fill in the title, description, and content
+- Add a cover image URL (optional)
+- Choose to publish immediately or save as draft
+- Mark as featured if desired
+
+### Edit Posts
+- Click "Edit" on any post in the dashboard
+- Modify all post details
+- Preview changes before saving
+- Delete posts with confirmation
+
+## Project Structure
+
+```
+src/
+├── app/                    # Next.js app directory
+│   ├── api/               # API routes
+│   ├── auth/              # Authentication pages
+│   ├── blog/              # Blog pages
+│   ├── dashboard/         # Dashboard pages
+│   └── globals.css        # Global styles
+├── components/            # React components
+├── lib/                   # Utility functions
+└── type/                  # TypeScript types
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js 14** - React framework
+- **Prisma** - Database ORM
+- **MongoDB** - Database
+- **NextAuth.js** - Authentication
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+- **TypeScript** - Type safety
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Contributing
 
-## Learn More
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License.

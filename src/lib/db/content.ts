@@ -161,3 +161,30 @@ export async function getFeaturedContents(limit = 3) {
     },
   })
 }
+
+export async function getTotalViews(): Promise<number> {
+  const result = await prisma.content.aggregate({
+    _sum: {
+      views: true,
+    },
+  })
+  return result._sum.views || 0
+}
+
+export async function getDashboardStats() {
+  const [totalPosts, totalViews, featuredPosts] = await Promise.all([
+    prisma.content.count(),
+    getTotalViews(),
+    prisma.content.count({
+      where: {
+        featured: true,
+      },
+    }),
+  ])
+
+  return {
+    totalPosts,
+    totalViews,
+    featuredPosts,
+  }
+}

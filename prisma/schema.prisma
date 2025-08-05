@@ -30,6 +30,8 @@ model User {
   name      String?
   email     String    @unique
   image     String?
+  websiteUrl String?  // URL to the connected CMS
+  bio       String?   // User bio
   contents  Content[]
   role      Role      @default(USER)
   createdAt DateTime  @default(now())
