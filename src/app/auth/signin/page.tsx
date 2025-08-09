@@ -1,13 +1,13 @@
 // app/auth/signin/page.tsx
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { MotionDiv } from '@/components/motion'
 
-export default function SignIn() {
+function SignInInner() {
   const router = useRouter()
   const params = useSearchParams()
   const callbackUrl = params?.get('callbackUrl') || '/dashboard'
@@ -177,3 +177,11 @@ export default function SignIn() {
     </div>
   )
 } 
+
+export default function SignIn() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-gray-600 dark:text-gray-300">Loading...</div></div>}>
+      <SignInInner />
+    </Suspense>
+  )
+}

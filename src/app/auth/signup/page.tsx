@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
-export default function SignUp() {
+function SignUpInner() {
   const router = useRouter()
   const params = useSearchParams()
   const callbackUrl = params?.get('callbackUrl') || '/dashboard'
@@ -46,6 +46,14 @@ export default function SignUp() {
         <p className="mt-4 text-sm">Already have an account? <Link className="text-indigo-600" href={`/auth/signin${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`}>Sign in</Link></p>
       </div>
     </div>
+  )
+}
+
+export default function SignUp() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-gray-600 dark:text-gray-300">Loading...</div></div>}>
+      <SignUpInner />
+    </Suspense>
   )
 }
 
