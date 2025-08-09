@@ -1,19 +1,17 @@
 // lib/auth.ts
-import { NextAuthOptions } from 'next-auth'
+import { NextAuthOptions, type DefaultSession } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from './prisma'
 import { compare } from 'bcryptjs'
 
-// Extend the User type to include role
+// Extend NextAuth types: keep default user fields (name, email, image) and add id/role
 declare module 'next-auth' {
   interface User {
     role?: string
   }
   interface Session {
-    user: {
+    user: DefaultSession['user'] & {
       id: string
-      email: string
-      name: string
       role?: string
     }
   }
