@@ -4,11 +4,15 @@ export interface BlogPost {
     title: string;
     description?: string;
     content: string;
-    slug: string;
+    slug?: string;
     excerpt?: string;
     coverImage?: string;
     published: boolean;
     featured?: boolean;
+    tags?: string[];
+    seoTitle?: string | null;
+    seoDescription?: string | null;
+    seoKeywords?: string[];
     author: {
       id: string;
       name: string;
@@ -17,4 +21,8 @@ export interface BlogPost {
     createdAt: Date;
     updatedAt: Date;
     views: number;
+    likes?: number;
+    shares?: number;
+    comments?: number;
+    readingTime?: number;
   }

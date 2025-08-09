@@ -24,6 +24,7 @@ export default function Newsletter() {
       setIsSubmitting(false)
     }
   }
+  return null
 
   if (submitted) {
     return (

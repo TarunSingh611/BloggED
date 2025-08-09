@@ -13,11 +13,12 @@ export default function BlogContent() {
   const [isLoading, setIsLoading] = useState(true)
   const searchParams = useSearchParams()
   const searchQuery = searchParams?.get('search') || ''
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || ''
   
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('/api/content?published=true')
+        const response = await fetch(`${API_BASE}/api/content?published=true`)
         if (response.ok) {
           const data = await response.json()
           setPosts(data)

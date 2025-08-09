@@ -1,6 +1,5 @@
 // app/layout.tsx
 import { Inter } from 'next/font/google'
-import { Toaster } from 'react-hot-toast'
 import Providers from '@/components/Providers'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
@@ -14,8 +13,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className} suppressHydrationWarning>
         <Providers>
           <div className="min-h-screen flex flex-col">
             <Navbar />
@@ -24,7 +23,6 @@ export default function RootLayout({
             </main>
             <Footer />
           </div>
-          <Toaster />
         </Providers>
       </body>
     </html>

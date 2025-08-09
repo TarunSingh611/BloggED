@@ -17,13 +17,14 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const router = useRouter()
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || ''
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [postResponse, allPostsResponse] = await Promise.all([
-          fetch(`/api/content/${params.id}`),
-          fetch('/api/content?published=true')
+          fetch(`${API_BASE}/api/content/${params.id}`),
+          fetch(`${API_BASE}/api/content?published=true`)
         ])
 
         if (!postResponse.ok) {
@@ -51,7 +52,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         setRelatedPosts(related)
 
         // Increment views
-        await fetch(`/api/content/${params.id}/views`, { method: 'POST' })
+        await fetch(`${API_BASE}/api/content/${params.id}/views`, { method: 'POST' })
       } catch (error) {
         console.error('Error fetching post:', error)
         setError('Failed to load post')

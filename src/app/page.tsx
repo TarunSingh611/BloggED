@@ -59,16 +59,18 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/blog"
-                className="btn-primary bg-white text-indigo-600 hover:bg-gray-100 px-8 py-3 text-lg"
+                className="btn-primary bg-white text-indigo-600 hover:bg-gray-100/30 px-8 py-3 text-lg"
               >
                 Start Reading
               </Link>
-              <Link
-                href="/dashboard"
+              <a
+                href={process.env.NEXT_PUBLIC_CMS_URL || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn-secondary bg-white/20 text-white hover:bg-white/30 px-8 py-3 text-lg"
               >
                 Write Your Story
-              </Link>
+              </a>
             </div>
           </MotionDiv>
         </div>

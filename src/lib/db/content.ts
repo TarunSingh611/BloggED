@@ -36,6 +36,7 @@ export async function getContents(options?: GetContentsOptions) {
       { title: { contains: options.searchQuery, mode: 'insensitive' } },
       { description: { contains: options.searchQuery, mode: 'insensitive' } },
       { content: { contains: options.searchQuery, mode: 'insensitive' } },
+      { slug: { contains: options.searchQuery, mode: 'insensitive' } },
     ]
   }
 
@@ -97,6 +98,10 @@ export async function createContent(data: {
   coverImage?: string
   published?: boolean
   featured?: boolean
+  tags?: string[]
+  seoTitle?: string
+  seoDescription?: string
+  seoKeywords?: string[]
   authorId: string
 }) {
   return prisma.content.create({
@@ -115,6 +120,10 @@ export async function updateContent(
     coverImage?: string
     published?: boolean
     featured?: boolean
+    tags?: string[]
+    seoTitle?: string
+    seoDescription?: string
+    seoKeywords?: string[]
   }
 ) {
   return prisma.content.update({

@@ -38,19 +38,20 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email
-          }
-        })
+        const user = (await prisma.user.findUnique({
+          where: { email: credentials.email },
+        })) as unknown as { id: string; email: string; name: string | null; role: any; image: string | null; websiteUrl: string | null; bio: string | null; createdAt: Date; updatedAt: Date; password?: string | null }
 
         if (!user) {
+          if (process.env.NODE_ENV !== 'production') console.warn('[auth] user not found for', credentials.email)
           return null
         }
 
-        // For now, we'll use a simple password check
-        // In production, you should use bcrypt or similar
-        const isPasswordValid = credentials.password === 'password' // Replace with proper password hashing
+        // Verify using bcrypt against stored hashed password from shared DB
+        const isPasswordValid = !!user.password && await compare(credentials.password, user.password)
+        if (!isPasswordValid && process.env.NODE_ENV !== 'production') {
+          console.warn('[auth] invalid password or missing hash for', credentials.email, 'hasPassword:', !!user.password)
+        }
 
         if (!isPasswordValid) {
           return null
@@ -68,6 +69,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt'
   },
+  debug: process.env.NODE_ENV !== 'production',
   callbacks: {
     async jwt({ token, user }) {
       if (user) {

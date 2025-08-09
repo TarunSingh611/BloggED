@@ -20,8 +20,13 @@ export default function ContactPage() {
     setSubmitStatus('idle')
 
     try {
-      // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || ''
+      const res = await fetch(`${API_BASE}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      if (!res.ok) throw new Error('Failed')
       setSubmitStatus('success')
       setFormData({ name: '', email: '', subject: '', message: '' })
     } catch (error) {
@@ -169,7 +174,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white">Email</h3>
-                      <p className="text-gray-600 dark:text-gray-400">hello@blogged.com</p>
+                      <p className="text-gray-600 dark:text-gray-400">{process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@blogged.com'}</p>
                     </div>
                   </div>
 

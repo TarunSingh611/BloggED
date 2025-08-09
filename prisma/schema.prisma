@@ -16,12 +16,28 @@ model Content {
   excerpt     String?
   coverImage  String?
   published   Boolean   @default(false)
-  featured    Boolean?   @default(false)
+  featured    Boolean   @default(false)
+  tags        String[] @default([])
+  seoTitle    String?
+  seoDescription String?
+  seoKeywords String[] @default([])
+  slug        String?
   authorId    String   @db.ObjectId  
   author      User     @relation(fields: [authorId], references: [id])  
+  likes       Int      @default(0)
+  shares      Int      @default(0)
+  comments    Int      @default(0)
+  readingTime Int?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   views       Int       @default(0)
+
+  // Relations
+  commentsList Comment[]
+  reactions    Reaction[]
+  ratings      Rating[]
+  bookmarks    Bookmark[]
+  analytics    AnalyticsDaily[]
 }
 
 
@@ -29,6 +45,7 @@ model User {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String?
   email     String    @unique
+  password  String?
   image     String?
   websiteUrl String?  // URL to the connected CMS
   bio       String?   // User bio
@@ -36,9 +53,110 @@ model User {
   role      Role      @default(USER)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  // Relations
+  comments   Comment[]
+  reactions  Reaction[]
+  ratings    Rating[]
+  bookmarks  Bookmark[]
+  resetTokens PasswordResetToken[]
 } 
 
 enum Role {
   USER
   ADMIN
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  contentId String   @db.ObjectId
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  parentId  String?  @db.ObjectId
+
+  content   Content  @relation(fields: [contentId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  parent    Comment? @relation("CommentToReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies   Comment[] @relation("CommentToReplies")
+}
+
+model Reaction {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      String   // e.g., LIKE, LOVE, CLAP
+  contentId String   @db.ObjectId
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  content   Content  @relation(fields: [contentId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([contentId, userId, type])
+}
+
+model Rating {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  value     Int      // 1..5
+  contentId String   @db.ObjectId
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  content   Content  @relation(fields: [contentId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Bookmark {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  contentId String   @db.ObjectId
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  content   Content  @relation(fields: [contentId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  token     String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+/// Aggregated, compact analytics per content per day, plus optional light samples
+model AnalyticsDaily {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  contentId    String   @db.ObjectId
+  date         DateTime // UTC date boundary for aggregation (00:00)
+
+  // Totals
+  views        Int      @default(0)
+  uniqueUsers  Int      @default(0)
+  upvotes      Int      @default(0)
+  downvotes    Int      @default(0)
+  bookmarks    Int      @default(0)
+  favorites    Int      @default(0)
+
+  // Time-on-page stats (milliseconds)
+  avgTimeMs    Int      @default(0)
+  timeSamples  Int      @default(0)
+  p50TimeMs    Int      @default(0)
+  p90TimeMs    Int      @default(0)
+
+  // Tag snapshot for the content to support cohort analysis at query-time
+  tags         String[] @default([])
+
+  // Optional light-weight samples for sequence/suggestion (capped)
+  // Store recent next-content IDs viewed after this content
+  recentNextContentIds String[] @default([])
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  content      Content  @relation(fields: [contentId], references: [id])
+
+  @@unique([contentId, date])
 }

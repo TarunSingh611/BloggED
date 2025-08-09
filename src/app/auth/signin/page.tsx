@@ -3,18 +3,46 @@
 
 import { useState } from 'react'
 import { signIn, getSession } from 'next-auth/react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { MotionDiv } from '@/components/motion'
-import Link from 'next/link'
 
 export default function SignIn() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const DEMO_EMAIL = process.env.NEXT_PUBLIC_DEMO_EMAIL || ''
+  const DEMO_PASSWORD = process.env.NEXT_PUBLIC_DEMO_PASSWORD || ''
+  console.log(DEMO_EMAIL, DEMO_PASSWORD)
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: ""
   })
+
+  const handleDemoLogin = async () => {
+    if (!DEMO_EMAIL || !DEMO_PASSWORD) {
+      setError('Demo credentials are not configured. Set NEXT_PUBLIC_DEMO_EMAIL and NEXT_PUBLIC_DEMO_PASSWORD in your .env.')
+      return
+    }
+    setIsLoading(true)
+    setError('')
+    try {
+      const result = await signIn('credentials', {
+        email: DEMO_EMAIL,
+        password: DEMO_PASSWORD,
+        redirect: false
+      })
+      if (result?.error) {
+        setError('Demo login failed')
+      } else {
+        router.push('/dashboard')
+      }
+    } catch (e) {
+      setError('Demo login failed')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -106,7 +134,7 @@ export default function SignIn() {
               />
             </div>
 
-            <div>
+            <div className="grid grid-cols-1 gap-3">
               <button
                 type="submit"
                 disabled={isLoading}
@@ -114,12 +142,22 @@ export default function SignIn() {
               >
                 {isLoading ? 'Signing in...' : 'Sign in'}
               </button>
+              <button
+                type="button"
+                onClick={handleDemoLogin}
+                disabled={isLoading}
+                className="btn-secondary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Signing in...' : 'Demo Login'}
+              </button>
             </div>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center space-y-2">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Demo credentials: admin@example.com / password
+              <Link href="/auth/signup" className="text-indigo-600 dark:text-indigo-400">Create an account</Link>
+              {' · '}
+              <Link href="/auth/reset" className="text-indigo-600 dark:text-indigo-400">Forgot password?</Link>
             </p>
           </div>
         </div>

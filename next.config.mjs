@@ -32,6 +32,23 @@ const nextConfig = {
             port: '',
             pathname: '/**',
           },
+          // Common ImageKit default host
+          {
+            protocol: 'https',
+            hostname: 'ik.imagekit.io',
+            port: '',
+            pathname: '/**',
+          },
+          // Dynamically allow ImageKit domain if provided via env
+          ...(() => {
+            try {
+              if (!process.env.IMAGEKIT_URL) return []
+              const { hostname, protocol } = new URL(process.env.IMAGEKIT_URL)
+              return [{ protocol: protocol.replace(':',''), hostname, port: '', pathname: '/**' }]
+            } catch {
+              return []
+            }
+          })(),
         ],
       },
 };

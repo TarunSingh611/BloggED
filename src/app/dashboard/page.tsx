@@ -13,9 +13,10 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || ''
         const [postsResponse, statsResponse] = await Promise.all([
-          fetch('/api/content?published=true'),
-          fetch('/api/dashboard/stats')
+          fetch(`${API_BASE}/api/content?published=true`),
+          fetch(`${API_BASE}/api/dashboard/stats`)
         ])
         
         if (postsResponse.ok && statsResponse.ok) {
@@ -120,9 +121,9 @@ export default function Dashboard() {
       <div className="card p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="heading-2 text-xl">Recent Posts</h2>
-          <Link href="/dashboard/create" className="btn-primary">
+          <a href={process.env.NEXT_PUBLIC_CMS_URL || '#'} target="_blank" rel="noopener noreferrer" className="btn-primary">
             Create New Post
-          </Link>
+          </a>
         </div>
         
         <div className="space-y-4">
@@ -166,12 +167,7 @@ export default function Dashboard() {
                 >
                   View
                 </Link>
-                <Link 
-                  href={`/dashboard/edit/${post.id}`}
-                  className="btn-primary text-sm px-3 py-1"
-                >
-                  Edit
-                </Link>
+                {/* Edit removed in blog app */}
               </div>
             </MotionDiv>
           ))}

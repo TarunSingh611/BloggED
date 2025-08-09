@@ -1,6 +1,7 @@
 // app/api/content/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { getContentById, updateContent, deleteContent } from '@/lib/db/content'
+import { attachTagsSnapshot } from '@/lib/db/analytics'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
@@ -87,7 +88,10 @@ export async function PUT(
       published,
       featured
     })
-
+    // record tags snapshot for analytics if tags present
+    if (Array.isArray(body?.tags) && body.tags.length > 0) {
+      await attachTagsSnapshot(params.id, body.tags)
+    }
     return NextResponse.json(updatedPost)
   } catch (error) {
     console.error('Error updating post:', error)

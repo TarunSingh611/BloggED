@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured')
     const take = searchParams.get('take')
     const skip = searchParams.get('skip')
+    const q = searchParams.get('q')
 
     const options: any = {}
     
@@ -25,6 +26,9 @@ export async function GET(request: NextRequest) {
     }
     if (skip) {
       options.skip = parseInt(skip)
+    }
+    if (q) {
+      options.searchQuery = q
     }
 
     const posts = await getContents(options)

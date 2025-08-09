@@ -27,12 +27,12 @@ export function SearchBar({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (query.trim()) {
-      const params = new URLSearchParams(searchParams)
+      const params = new URLSearchParams(searchParams ? searchParams.toString() : undefined)
       params.set('search', query.trim())
       router.push(`/blog?${params.toString()}`)
     } else {
       // Remove search param if query is empty
-      const params = new URLSearchParams(searchParams)
+      const params = new URLSearchParams(searchParams ? searchParams.toString() : undefined)
       params.delete('search')
       router.push(`/blog?${params.toString()}`)
     }
@@ -40,7 +40,7 @@ export function SearchBar({
 
   const handleClear = () => {
     setQuery('')
-    const params = new URLSearchParams(searchParams)
+    const params = new URLSearchParams(searchParams ? searchParams.toString() : undefined)
     params.delete('search')
     router.push(`/blog?${params.toString()}`)
   }

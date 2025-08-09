@@ -36,9 +36,25 @@ A modern blog platform built with Next.js, Prisma, and Tailwind CSS. Features a 
 3. **Set up environment variables**
    Create a `.env.local` file in the root directory:
    ```env
-   DATABASE_URL="mongodb://localhost:27017/blogged"
-   NEXTAUTH_URL="http://localhost:3000"
+   # Shared CMS database
+   DATABASE_URL="mongodb://localhost:27017/ai-content-platform"
+
+   # This blog's URL
+   NEXTAUTH_URL="http://localhost:3001"
    NEXTAUTH_SECRET="your-secret-key-here"
+
+   # Optional demo creds to auto-fill sign-in form (non-sensitive; UI only)
+   NEXT_PUBLIC_DEMO_EMAIL=""
+   NEXT_PUBLIC_DEMO_PASSWORD=""
+
+   # Optional media/CDN
+   IMAGEKIT_URL=""
+
+   # Optional: point this app to a different API base (defaults to same origin)
+   NEXT_PUBLIC_API_BASE_URL=""
+
+   # CMS URL for authoring (used for redirects from CTA and dashboard buttons)
+   NEXT_PUBLIC_CMS_URL="http://localhost:3000"
    ```
 
 4. **Set up the database**
@@ -54,7 +70,8 @@ A modern blog platform built with Next.js, Prisma, and Tailwind CSS. Features a 
 
 6. **Start the development server**
    ```bash
-   npm run dev
+   # Run on a separate port from the CMS so both can run together
+   cross-env PORT=3001 npm run dev
    ```
 
 7. **Open your browser**
@@ -73,12 +90,10 @@ After running the seed script, you can sign in with:
 - Use the "View" button to see the published version
 - Filter posts by status (All, Published, Drafts)
 
-### Create New Posts
-- Navigate to `/dashboard/create`
-- Fill in the title, description, and content
-- Add a cover image URL (optional)
-- Choose to publish immediately or save as draft
-- Mark as featured if desired
+### Authoring
+Authoring happens in the CMS. This blog is read-only.
+- Homepage “Write Your Story” and Dashboard “Create New Post” redirect to `NEXT_PUBLIC_CMS_URL`.
+- Edit/Delete actions are disabled in this blog app.
 
 ### Edit Posts
 - Click "Edit" on any post in the dashboard

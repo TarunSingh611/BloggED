@@ -38,7 +38,8 @@ export default function PostsList() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('/api/dashboard/stats')
+      const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || ''
+      const response = await fetch(`${API_BASE}/api/dashboard/stats`)
       if (response.ok) {
         const data = await response.json()
         setStats(data)
@@ -50,7 +51,8 @@ export default function PostsList() {
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch('/api/content')
+      const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || ''
+      const response = await fetch(`${API_BASE}/api/content`)
       if (response.ok) {
         const data = await response.json()
         setPosts(data)
@@ -70,27 +72,7 @@ export default function PostsList() {
     return true
   })
 
-  const handleDelete = async (postId: string) => {
-    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
-      return
-    }
-
-    try {
-      const response = await fetch(`/api/content/${postId}`, {
-        method: 'DELETE',
-      })
-
-      if (response.ok) {
-        setPosts(posts.filter(post => post.id !== postId))
-        alert('Post deleted successfully!')
-      } else {
-        throw new Error('Failed to delete post')
-      }
-    } catch (error) {
-      console.error('Error deleting post:', error)
-      alert('Failed to delete post. Please try again.')
-    }
-  }
+  // Delete disabled in blog app (CMS-only authoring)
 
   if (isLoading) {
     return (
@@ -123,9 +105,9 @@ export default function PostsList() {
               <span>Featured Posts: {stats.featuredPosts}</span>
             </div>
           </div>
-          <Link href="/dashboard/create" className="btn-primary">
+          <a href={process.env.NEXT_PUBLIC_CMS_URL || '#'} target="_blank" rel="noopener noreferrer" className="btn-primary">
             Create New Post
-          </Link>
+          </a>
         </div>
       </MotionDiv>
 
@@ -221,18 +203,8 @@ export default function PostsList() {
                   >
                     View
                   </Link>
-                  <Link 
-                    href={`/dashboard/edit/${post.id}`}
-                    className="btn-primary text-sm px-3 py-1"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(post.id)}
-                    className="btn-danger text-sm px-3 py-1"
-                  >
-                    Delete
-                  </button>
+                  {/* Edit removed in blog app */}
+                  {/* Delete removed in blog app */}
                 </div>
               </MotionDiv>
             ))}

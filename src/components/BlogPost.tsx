@@ -5,7 +5,12 @@ import { format } from 'date-fns'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { MotionArticle } from './motion'
-import Feedback from './Feedback'
+import Comments from './Comments'
+import VoteButtons from './VoteButtons'
+import BookmarkButton from './BookmarkButton'
+import FavoriteButton from './FavoriteButton'
+import { useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import RelatedPosts from './RelatedPosts'
 import { calculateReadingTime, formatReadingTime, formatContent } from '@/lib/utils'
 
@@ -33,7 +38,18 @@ interface BlogPostProps {
 }
 
 export default function BlogPost({ post, relatedPosts }: BlogPostProps) {
+  const { status } = useSession()
   const readingTime = calculateReadingTime(post.content)
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || ''
+  useEffect(() => {
+    let startedAt = Date.now()
+    return () => {
+      const timeMs = Date.now() - startedAt
+      // fire-and-forget; ignore errors
+      fetch(`${API_BASE}/api/analytics/time`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contentId: post.id, timeMs }) })
+        .catch(() => {})
+    }
+  }, [post.id])
   
   return (
     <MotionArticle
@@ -216,10 +232,17 @@ export default function BlogPost({ post, relatedPosts }: BlogPostProps) {
           </div>
         </div>
 
-        {/* Feedback Section */}
-        <div className="mt-8">
-          <Feedback postId={post.id} postTitle={post.title} />
+        {/* Reactions and Comments */}
+        <div className="mt-8 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <VoteButtons contentId={post.id} />
+            <BookmarkButton contentId={post.id} />
+            <FavoriteButton contentId={post.id} />
+          </div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">{post.views} views</div>
         </div>
+
+        <Comments contentId={post.id} />
 
         {/* Related Posts */}
         {relatedPosts && relatedPosts.length > 0 && (

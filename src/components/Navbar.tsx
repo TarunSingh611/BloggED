@@ -1,15 +1,18 @@
 // components/Navbar.tsx
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { MotionDiv } from './motion'
+import { useSession, signOut } from 'next-auth/react'
+import Image from 'next/image'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const pathname = usePathname()
+  const { data: session, status } = useSession()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -75,20 +78,24 @@ export default function Navbar() {
             </form>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 focus:outline-none focus:text-indigo-600 dark:focus:text-indigo-400"
-            >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {isOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
+          {/* Right side auth/actions + mobile toggle */}
+          <div className="flex items-center gap-3">
+            <AccountMenu status={status} name={session?.user?.name || session?.user?.email || 'Guest'} image={session?.user?.image} />
+
+            <div className="md:hidden flex items-center">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 focus:outline-none focus:text-indigo-600 dark:focus:text-indigo-400"
+              >
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {isOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -148,10 +155,66 @@ export default function Navbar() {
               >
                 Contact
               </Link>
+
+              {/* Auth actions (mobile) */}
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                {status === 'authenticated' ? (
+                  <button onClick={() => { setIsOpen(false); signOut({ callbackUrl: '/' }) }} className="btn-secondary col-span-2">Sign out</button>
+                ) : (
+                  <>
+                    <Link href="/auth/signin" onClick={() => setIsOpen(false)} className="btn-secondary">Sign in</Link>
+                    <Link href="/auth/signup" onClick={() => setIsOpen(false)} className="btn-primary">Sign up</Link>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         )}
       </div>
     </nav>
+  )
+}
+
+function AccountMenu({ status, name, image }: { status: 'authenticated' | 'loading' | 'unauthenticated', name?: string | null, image?: string | null }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const onDoc = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false) }
+    document.addEventListener('click', onDoc)
+    return () => document.removeEventListener('click', onDoc)
+  }, [])
+
+  return (
+    <div className="relative hidden md:block" ref={ref}>
+      <button onClick={() => setOpen(v=>!v)} className="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
+        <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+          {image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={image} alt={name || 'User'} className="w-full h-full object-cover" />
+          ) : (
+            <svg className="w-8 h-8 text-gray-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.866 0-7 3.134-7 7h14c0-3.866-3.134-7-7-7z"/></svg>
+          )}
+        </div>
+        <span className="text-sm text-gray-700 dark:text-gray-300">{status === 'authenticated' ? name : 'Guest'}</span>
+        <svg className="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clipRule="evenodd"/></svg>
+      </button>
+      {open && (
+        <div className="absolute right-0 mt-2 w-56 card p-2">
+          {status === 'authenticated' ? (
+            <div className="py-1">
+              <div className="px-3 py-2 text-sm text-gray-600 dark:text-gray-300">Signed in as <span className="font-medium">{name}</span></div>
+              <Link href="/dashboard/saved" className="block px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800">Saved blogs</Link>
+              <button onClick={() => signOut({ callbackUrl: '/' })} className="w-full text-left px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800">Sign out</button>
+            </div>
+          ) : (
+            <div className="py-1">
+              <Link href="/auth/signin" className="block px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800">Sign in</Link>
+              <Link href="/auth/signup" className="block px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800">Sign up</Link>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   )
 }
