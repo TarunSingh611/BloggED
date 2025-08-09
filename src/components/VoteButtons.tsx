@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 interface VoteState {
   upvotes: number
@@ -13,6 +13,7 @@ interface VoteState {
 export default function VoteButtons({ contentId }: { contentId: string }) {
   const { status } = useSession()
   const router = useRouter()
+  const pathname = usePathname()
   const [state, setState] = useState<VoteState>({ upvotes: 0, downvotes: 0, userVote: null })
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -31,7 +32,7 @@ export default function VoteButtons({ contentId }: { contentId: string }) {
 
   const vote = async (type: 'UPVOTE' | 'DOWNVOTE') => {
     if (submitting) return
-    if (status !== 'authenticated') { router.push('/auth/signin'); return }
+    if (status !== 'authenticated') { router.push(`/auth/signin?callbackUrl=${encodeURIComponent(pathname || '/')}`); return }
     setSubmitting(true)
     try {
       const res = await fetch(`${API_BASE}/api/content/${contentId}/reactions`, {
@@ -39,7 +40,7 @@ export default function VoteButtons({ contentId }: { contentId: string }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type }),
       })
-      if (res.status === 401) { router.push('/auth/signin'); return }
+      if (res.status === 401) { router.push(`/auth/signin?callbackUrl=${encodeURIComponent(pathname || '/')}`); return }
       const data = await res.json()
       if ('upvotes' in data && 'downvotes' in data) {
         setState({ upvotes: data.upvotes, downvotes: data.downvotes, userVote: data.userVote })

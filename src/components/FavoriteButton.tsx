@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 export default function FavoriteButton({ contentId }: { contentId: string }) {
   const { status } = useSession()
   const router = useRouter()
+  const pathname = usePathname()
   const [fav, setFav] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || ''
@@ -24,7 +25,7 @@ export default function FavoriteButton({ contentId }: { contentId: string }) {
   }, [contentId])
 
   const toggle = async () => {
-    if (status !== 'authenticated') { router.push('/auth/signin'); return }
+    if (status !== 'authenticated') { router.push(`/auth/signin?callbackUrl=${encodeURIComponent(pathname || '/')}`); return }
     setLoading(true)
     try {
       const res = await fetch(`${API_BASE}/api/content/${contentId}/reactions`, {

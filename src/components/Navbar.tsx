@@ -12,6 +12,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const pathname = usePathname()
+  const defaultCallback = pathname && !pathname.startsWith('/auth') ? pathname : '/dashboard'
   const { data: session, status } = useSession()
 
   const handleSearch = (e: React.FormEvent) => {
@@ -162,8 +163,8 @@ export default function Navbar() {
                   <button onClick={() => { setIsOpen(false); signOut({ callbackUrl: '/' }) }} className="btn-secondary col-span-2">Sign out</button>
                 ) : (
                   <>
-                    <Link href="/auth/signin" onClick={() => setIsOpen(false)} className="btn-secondary">Sign in</Link>
-                    <Link href="/auth/signup" onClick={() => setIsOpen(false)} className="btn-primary">Sign up</Link>
+                    <Link href={`/auth/signin?callbackUrl=${encodeURIComponent(defaultCallback || '/')}`} onClick={() => setIsOpen(false)} className="btn-secondary">Sign in</Link>
+                    <Link href={`/auth/signup?callbackUrl=${encodeURIComponent(defaultCallback || '/')}`} onClick={() => setIsOpen(false)} className="btn-primary">Sign up</Link>
                   </>
                 )}
               </div>
@@ -178,6 +179,8 @@ export default function Navbar() {
 function AccountMenu({ status, name, image }: { status: 'authenticated' | 'loading' | 'unauthenticated', name?: string | null, image?: string | null }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
+  const defaultCallback = pathname && !pathname.startsWith('/auth') ? pathname : '/dashboard'
 
   useEffect(() => {
     const onDoc = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false) }
@@ -209,8 +212,8 @@ function AccountMenu({ status, name, image }: { status: 'authenticated' | 'loadi
             </div>
           ) : (
             <div className="py-1">
-              <Link href="/auth/signin" className="block px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800">Sign in</Link>
-              <Link href="/auth/signup" className="block px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800">Sign up</Link>
+              <Link href={`/auth/signin?callbackUrl=${encodeURIComponent(defaultCallback || '/')}`} className="block px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800">Sign in</Link>
+              <Link href={`/auth/signup?callbackUrl=${encodeURIComponent(defaultCallback || '/')}`} className="block px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800">Sign up</Link>
             </div>
           )}
         </div>

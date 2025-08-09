@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 
 export default function SavedPage() {
   const { status } = useSession()
+  const pathname = usePathname()
   const [bookmarks, setBookmarks] = useState<any[]>([])
   const [favorites, setFavorites] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -35,7 +37,7 @@ export default function SavedPage() {
       <div className="max-w-4xl mx-auto p-6">
         <div className="card p-8 text-center">
           <p>Sign in to view saved blogs.</p>
-          <Link href="/auth/signin" className="btn-primary mt-4 inline-block">Sign in</Link>
+          <Link href={`/auth/signin?callbackUrl=${encodeURIComponent(pathname || '/')}`} className="btn-primary mt-4 inline-block">Sign in</Link>
         </div>
       </div>
     )

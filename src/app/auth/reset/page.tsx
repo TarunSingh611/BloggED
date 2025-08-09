@@ -7,6 +7,7 @@ function ResetPasswordInner() {
   const router = useRouter()
   const params = useSearchParams()
   const token = params?.get('token') || ''
+  const callbackUrl = params?.get('callbackUrl') || '/dashboard'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [sent, setSent] = useState(false)
@@ -15,7 +16,7 @@ function ResetPasswordInner() {
 
   const requestReset = async () => {
     setError('')
-    const res = await fetch('/api/auth/reset/request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) })
+    const res = await fetch('/api/auth/reset/request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, callbackUrl }) })
     if (res.ok) setSent(true)
   }
 
@@ -49,7 +50,7 @@ function ResetPasswordInner() {
       <div className="card p-8 w-full max-w-md">
         <h1 className="heading-2 mb-4">Set a new password</h1>
         {done ? (
-          <p>Password reset. You can close this tab and sign in.</p>
+          <p>Password reset. <button className="text-indigo-600" onClick={() => router.push(`/auth/signin${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`)}>Sign in</button>.</p>
         ) : (
           <div className="space-y-4">
             {error && <div className="text-red-600">{error}</div>}

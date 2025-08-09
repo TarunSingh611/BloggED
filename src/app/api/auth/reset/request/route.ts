@@ -6,7 +6,7 @@ import nodemailer from 'nodemailer'
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json()
+    const { email, callbackUrl } = await request.json()
     if (!email) return NextResponse.json({ success: true }) // do not reveal
 
     const user = await prisma.user.findUnique({ where: { email } })
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       secure: true,
       auth: { user: process.env.EMAIL_ADDRESS, pass: process.env.EMAIL_PASSWORD },
     })
-    const resetUrl = `${process.env.NEXTAUTH_URL || ''}/auth/reset?token=${token}`
+    const resetUrl = `${process.env.NEXTAUTH_URL || ''}/auth/reset?token=${token}${callbackUrl ? `&callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`
     await transporter.sendMail({
       from: `${process.env.EMAIL_NAME || 'Support'} <${process.env.EMAIL_ADDRESS}>`,
       to: email,

@@ -163,13 +163,13 @@ export default function PostsList() {
                 className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
                 <div className="flex items-center space-x-4">
-                  {post.coverImage && (
+                  {/* {post.coverImage && (
                     <img
                       src={post.coverImage}
                       alt={post.title}
                       className="w-12 h-12 rounded-lg object-cover"
                     />
-                  )}
+                  )} */}
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-1">
                       <h3 className="font-medium text-gray-900 dark:text-white">

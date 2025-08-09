@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 export default function SignUp() {
   const router = useRouter()
+  const params = useSearchParams()
+  const callbackUrl = params?.get('callbackUrl') || '/dashboard'
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [formData, setFormData] = useState({ name: '', email: '', password: '' })
@@ -21,7 +23,8 @@ export default function SignUp() {
         body: JSON.stringify(formData)
       })
       if (!res.ok) throw new Error('Failed')
-      router.push('/auth/signin')
+      // After successful signup, send user to sign-in preserving original intent
+      router.push(`/auth/signin${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`)
     } catch (e) {
       setError('Sign up failed')
     } finally {
@@ -40,7 +43,7 @@ export default function SignUp() {
           <input className="input w-full" placeholder="Password" type="password" value={formData.password} onChange={e=>setFormData({...formData, password: e.target.value})} />
           <button type="submit" disabled={isLoading} className="btn-primary w-full">{isLoading ? 'Creating...' : 'Sign up'}</button>
         </form>
-        <p className="mt-4 text-sm">Already have an account? <Link className="text-indigo-600" href="/auth/signin">Sign in</Link></p>
+        <p className="mt-4 text-sm">Already have an account? <Link className="text-indigo-600" href={`/auth/signin${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`}>Sign in</Link></p>
       </div>
     </div>
   )

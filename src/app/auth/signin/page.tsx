@@ -2,13 +2,15 @@
 'use client'
 
 import { useState } from 'react'
-import { signIn, getSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { MotionDiv } from '@/components/motion'
 
 export default function SignIn() {
   const router = useRouter()
+  const params = useSearchParams()
+  const callbackUrl = params?.get('callbackUrl') || '/dashboard'
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const DEMO_EMAIL = process.env.NEXT_PUBLIC_DEMO_EMAIL || ''
@@ -35,7 +37,7 @@ export default function SignIn() {
       if (result?.error) {
         setError('Demo login failed')
       } else {
-        router.push('/dashboard')
+        router.push(callbackUrl)
       }
     } catch (e) {
       setError('Demo login failed')
@@ -59,7 +61,7 @@ export default function SignIn() {
       if (result?.error) {
         setError('Invalid email or password')
       } else {
-        router.push('/dashboard')
+        router.push(callbackUrl)
       }
     } catch (error) {
       setError('An error occurred. Please try again.')
@@ -155,17 +157,21 @@ export default function SignIn() {
 
           <div className="mt-6 text-center space-y-2">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              <Link href="/auth/signup" className="text-indigo-600 dark:text-indigo-400">Create an account</Link>
+              <Link href={`/auth/signup${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`} className="text-indigo-600 dark:text-indigo-400">Create an account</Link>
               {' · '}
-              <Link href="/auth/reset" className="text-indigo-600 dark:text-indigo-400">Forgot password?</Link>
+              <Link href={`/auth/reset${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`} className="text-indigo-600 dark:text-indigo-400">Forgot password?</Link>
             </p>
           </div>
         </div>
 
         <div className="text-center">
-          <Link href="/" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
-            ← Back to Home
-          </Link>
+          {callbackUrl ? (
+            <Link href={callbackUrl} className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
+              ← Back
+            </Link>
+          ) : (
+            <Link href="/" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">← Back to Home</Link>
+          )}
         </div>
       </MotionDiv>
     </div>

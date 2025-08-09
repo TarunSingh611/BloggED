@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { MotionDiv } from './motion'
 import { formatDistanceToNow } from 'date-fns'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 interface CommentUser {
   id: string
@@ -28,6 +28,7 @@ interface CommentsProps {
 export default function Comments({ contentId }: CommentsProps) {
   const { status } = useSession()
   const router = useRouter()
+  const pathname = usePathname()
   const [comments, setComments] = useState<CommentItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string>('')
@@ -69,7 +70,7 @@ export default function Comments({ contentId }: CommentsProps) {
         body: JSON.stringify({ text }),
       })
       if (res.status === 401) {
-        router.push('/auth/signin')
+        router.push(`/auth/signin?callbackUrl=${encodeURIComponent(pathname || '/')}`)
         return
       }
       const created: CommentItem = await res.json()
@@ -131,7 +132,7 @@ export default function Comments({ contentId }: CommentsProps) {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: replyText, parentId })
       })
-      if (res.status === 401) { router.push('/auth/signin'); return }
+      if (res.status === 401) { router.push(`/auth/signin?callbackUrl=${encodeURIComponent(pathname || '/')}`); return }
       const created = await res.json()
       setComments(prev => {
         return prev.map(c => c.id === parentId ? { ...c, replies: [...(c.replies||[]), created] } : c)
