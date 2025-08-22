@@ -422,7 +422,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Documentation**: Check this README and inline code comments
 - **Issues**: [GitHub Issues](https://github.com/TarunSingh611/BloggED/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/TarunSingh611/BloggED/discussions)
-- **Email**: tarunsingh611@gmail.com
+- **Email**: thakurtarun936@gmail.com
 
 ### Common Issues
 
