@@ -1,10 +1,10 @@
 # 🚀 Blogged - Modern Blog Platform
 
-[![GitHub stars](https://img.shields.io/github/stars/your-username/blogged?style=for-the-badge&logo=github&color=yellow)](https://github.com/your-username/blogged/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/your-username/blogged?style=for-the-badge&logo=github&color=blue)](https://github.com/your-username/blogged/network)
-[![GitHub issues](https://img.shields.io/github/issues/your-username/blogged?style=for-the-badge&logo=github&color=red)](https://github.com/your-username/blogged/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/your-username/blogged?style=for-the-badge&logo=github&color=green)](https://github.com/your-username/blogged/pulls)
-[![License](https://img.shields.io/github/license/your-username/blogged?style=for-the-badge&logo=github&color=purple)](https://github.com/your-username/blogged/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/TarunSingh611/BloggED?style=for-the-badge&logo=github&color=yellow)](https://github.com/TarunSingh611/BloggED/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/TarunSingh611/BloggED?style=for-the-badge&logo=github&color=blue)](https://github.com/TarunSingh611/BloggED/network)
+[![GitHub issues](https://img.shields.io/github/issues/TarunSingh611/BloggED?style=for-the-badge&logo=github&color=red)](https://github.com/TarunSingh611/BloggED/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/TarunSingh611/BloggED?style=for-the-badge&logo=github&color=green)](https://github.com/TarunSingh611/BloggED/pulls)
+[![License](https://img.shields.io/github/license/TarunSingh611/BloggED?style=for-the-badge&logo=github&color=purple)](https://github.com/TarunSingh611/BloggED/blob/main/LICENSE)
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.2.18-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-18.2.0-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
@@ -15,20 +15,20 @@
 [![NextAuth.js](https://img.shields.io/badge/NextAuth.js-4.24.11-black?style=for-the-badge&logo=next-auth)](https://next-auth.js.org/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.15.0-black?style=for-the-badge&logo=framer)](https://www.framer.com/motion/)
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Available-green?style=for-the-badge&logo=vercel)](https://your-deployment-url.com)
-[![Documentation](https://img.shields.io/badge/Documentation-Complete-blue?style=for-the-badge&logo=read-the-docs)](https://github.com/your-username/blogged#readme)
-[![Contributing](https://img.shields.io/badge/Contributing-Welcome-green?style=for-the-badge&logo=github)](https://github.com/your-username/blogged/blob/main/CONTRIBUTING.md)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Available-green?style=for-the-badge&logo=vercel)](https://blogg-ed.vercel.app)
+[![Documentation](https://img.shields.io/badge/Documentation-Complete-blue?style=for-the-badge&logo=read-the-docs)](https://github.com/TarunSingh611/BloggED#readme)
+[![Contributing](https://img.shields.io/badge/Contributing-Welcome-green?style=for-the-badge&logo=github)](https://github.com/TarunSingh611/BloggED/blob/main/CONTRIBUTING.md)
 
 <div align="center">
 
-![GitHub Stats](https://github-readme-stats.vercel.app/api?username=your-username&show_icons=true&theme=radical&hide_border=true&bg_color=0D1117&title_color=58A6FF&text_color=C9D1D9&icon_color=58A6FF&hide=contribs,issues)
+![GitHub Stats](https://github-readme-stats.vercel.app/api?username=TarunSingh611&show_icons=true&theme=radical&hide_border=true&bg_color=0D1117&title_color=58A6FF&text_color=C9D1D9&icon_color=58A6FF&hide=contribs,issues)
 
-![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=your-username&layout=compact&theme=radical&hide_border=true&bg_color=0D1117&title_color=58A6FF&text_color=C9D1D9)
+![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=TarunSingh611&layout=compact&theme=radical&hide_border=true&bg_color=0D1117&title_color=58A6FF&text_color=C9D1D9)
 
-![GitHub Streak](https://github-readme-streak-stats.herokuapp.com/?user=your-username&theme=radical&hide_border=true&background=0D1117&stroke=58A6FF&ring=58A6FF&fire=58A6FF&currStreakNum=C9D1D9&sideNums=C9D1D9&currStreakLabel=C9D1D9&sideLabels=C9D1D9&dates=C9D1D9)
+![GitHub Streak](https://github-readme-streak-stats.herokuapp.com/?user=TarunSingh611&theme=radical&hide_border=true&background=0D1117&stroke=58A6FF&ring=58A6FF&fire=58A6FF&currStreakNum=C9D1D9&sideNums=C9D1D9&currStreakLabel=C9D1D9&sideLabels=C9D1D9&dates=C9D1D9)
 
-![Profile Views](https://komarev.com/ghpvc/?username=your-username&style=for-the-badge&color=58A6FF)
-![Repository Views](https://komarev.com/ghpvc/?username=your-username&repo=blogged&style=for-the-badge&color=58A6FF)
+![Profile Views](https://komarev.com/ghpvc/?username=TarunSingh611&style=for-the-badge&color=58A6FF)
+![Repository Views](https://komarev.com/ghpvc/?username=TarunSingh611&repo=BloggED&style=for-the-badge&color=58A6FF)
 
 </div>
 
@@ -36,8 +36,8 @@
 
 ## 📋 Project Information
 
-- **Repository**: [your-username/blogged](https://github.com/your-username/blogged)
-- **Live Demo**: [https://your-deployment-url.com](https://your-deployment-url.com)
+- **Repository**: [TarunSingh611/BloggED](https://github.com/TarunSingh611/BloggED)
+- **Live Demo**: [https://blogg-ed.vercel.app](https://blogg-ed.vercel.app)
 - **Project Description**: A modern, full-featured blog platform built with Next.js 14, featuring a beautiful dashboard for content management, user authentication, study materials integration, and a responsive blog frontend with advanced analytics and engagement features.
 
 ---
@@ -118,8 +118,8 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/blogged.git
-   cd blogged
+   git clone https://github.com/TarunSingh611/BloggED.git
+   cd BloggED
    ```
 
 2. **Install dependencies**
@@ -420,9 +420,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Getting Help
 
 - **Documentation**: Check this README and inline code comments
-- **Issues**: [GitHub Issues](https://github.com/your-username/blogged/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/blogged/discussions)
-- **Email**: your-email@example.com
+- **Issues**: [GitHub Issues](https://github.com/TarunSingh611/BloggED/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/TarunSingh611/BloggED/discussions)
+- **Email**: tarunsingh611@gmail.com
 
 ### Common Issues
 
@@ -463,7 +463,7 @@ npm install
 
 Thanks to all the contributors who have helped make this project better!
 
-[![Contributors](https://contrib.rocks/image?repo=your-username/blogged)](https://github.com/your-username/blogged/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=TarunSingh611/BloggED)](https://github.com/TarunSingh611/BloggED/graphs/contributors)
 
 ---
 
@@ -471,14 +471,14 @@ Thanks to all the contributors who have helped make this project better!
 
 <div align="center">
 
-![Repository Size](https://img.shields.io/github/repo-size/your-username/blogged?style=for-the-badge&logo=github&color=blue)
-![Code Size](https://img.shields.io/github/languages/code-size/your-username/blogged?style=for-the-badge&logo=github&color=green)
-![Last Commit](https://img.shields.io/github/last-commit/your-username/blogged?style=for-the-badge&logo=github&color=orange)
-![Commit Activity](https://img.shields.io/github/commit-activity/m/your-username/blogged?style=for-the-badge&logo=github&color=purple)
+![Repository Size](https://img.shields.io/github/repo-size/TarunSingh611/BloggED?style=for-the-badge&logo=github&color=blue)
+![Code Size](https://img.shields.io/github/languages/code-size/TarunSingh611/BloggED?style=for-the-badge&logo=github&color=green)
+![Last Commit](https://img.shields.io/github/last-commit/TarunSingh611/BloggED?style=for-the-badge&logo=github&color=orange)
+![Commit Activity](https://img.shields.io/github/commit-activity/m/TarunSingh611/BloggED?style=for-the-badge&logo=github&color=purple)
 
-![Followers](https://img.shields.io/github/followers/your-username?style=for-the-badge&logo=github&color=blue)
-![Sponsors](https://img.shields.io/github/sponsors/your-username?style=for-the-badge&logo=github&color=pink)
-![Discussions](https://img.shields.io/github/discussions-search/your-username/blogged?style=for-the-badge&logo=github&color=green)
+![Followers](https://img.shields.io/github/followers/TarunSingh611?style=for-the-badge&logo=github&color=blue)
+![Sponsors](https://img.shields.io/github/sponsors/TarunSingh611?style=for-the-badge&logo=github&color=pink)
+![Discussions](https://img.shields.io/github/discussions-search/TarunSingh611/BloggED?style=for-the-badge&logo=github&color=green)
 
 </div>
 
@@ -486,12 +486,12 @@ Thanks to all the contributors who have helped make this project better!
 
 <div align="center">
 
-**Made with ❤️ by [Your Name](https://github.com/your-username)**
+**Made with ❤️ by Tarun Singh**
 
-[![GitHub](https://img.shields.io/badge/GitHub-Profile-black?style=for-the-badge&logo=github)](https://github.com/your-username)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/your-username)
-[![Twitter](https://img.shields.io/badge/Twitter-Follow-blue?style=for-the-badge&logo=twitter)](https://twitter.com/your-username)
-[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-green?style=for-the-badge&logo=globe)](https://your-portfolio.com)
+[![GitHub](https://img.shields.io/badge/GitHub-Profile-black?style=for-the-badge&logo=github)](https://github.com/TarunSingh611)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/tarun-singh-611)
+[![Twitter](https://img.shields.io/badge/Twitter-Follow-blue?style=for-the-badge&logo=twitter)](https://twitter.com/TarunSingh611)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-green?style=for-the-badge&logo=globe)](https://tarunsingh611.github.io)
 
 **⭐ Star this repository if you found it helpful!**
 
