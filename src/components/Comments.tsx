@@ -243,7 +243,8 @@ function ReplyForm({ onSubmit, onCancel }: { onSubmit: (text: string) => void, o
   const [val, setVal] = useState('')
   return (
     <div className="mt-2">
-      <textarea className="input w-full" rows={2} placeholder="Write a reply..." value={val} onChange={(e)=>setVal(e.target.value)} />
+      <label htmlFor="reply" className="sr-only">Reply</label>
+      <textarea id="reply" className="input w-full" rows={2} placeholder="Write a reply..." value={val} onChange={(e)=>setVal(e.target.value)} />
       <div className="flex gap-2 mt-2">
         <button className="btn-primary" onClick={() => onSubmit(val)}>Reply</button>
         <button className="btn-secondary" onClick={onCancel}>Cancel</button>

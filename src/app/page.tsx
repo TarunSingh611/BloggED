@@ -6,8 +6,9 @@ import Link from 'next/link'
 import { MotionDiv } from '@/components/motion';
 
 export default function Home() {
-  const [posts, setPosts] = useState([])
+  const [posts, setPosts] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -15,10 +16,14 @@ export default function Home() {
         const response = await fetch('/api/content?take=6&published=true')
         if (response.ok) {
           const data = await response.json()
-          setPosts(data)
+          setPosts(Array.isArray(data) ? data : [])
+        } else {
+          const payload = await response.json().catch(() => ({}))
+          setLoadError(payload.error || 'Published stories are unavailable right now.')
         }
       } catch (error) {
         console.error('Error fetching posts:', error)
+        setLoadError('Published stories are unavailable right now.')
       } finally {
         setIsLoading(false)
       }
@@ -84,12 +89,23 @@ export default function Home() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-center mb-12"
         >
-          <h2 className="heading-2 mb-4">Featured Stories</h2>
+          <h2 className="heading-2 mb-4">Latest stories</h2>
           <p className="body-text text-lg max-w-2xl mx-auto">
-            Curated content that inspires, educates, and entertains
+            Published in the Content Studio and read here
           </p>
         </MotionDiv>
+
+        {loadError && (
+          <p className="mb-8 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-center text-amber-900" role="alert">
+            {loadError} Publish a story in the Content Studio, then refresh this page.
+          </p>
+        )}
         
+        {posts.length === 0 && !loadError ? (
+          <p className="text-center text-gray-600">
+            No published stories yet. They show up here after you publish them in the studio.
+          </p>
+        ) : posts.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts?.map?.((post: any, index: number) => (
             <MotionDiv
@@ -146,7 +162,7 @@ export default function Home() {
                 
                 <div className="flex items-center justify-between">
                   <Link
-                    href={`/blog/${post.id}`}
+                    href={`/blog/${post.slug || post.id}`}
                     className="text-indigo-600 dark:text-indigo-400 font-medium hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
                   >
                     Read More →
@@ -163,6 +179,7 @@ export default function Home() {
             </MotionDiv>
           ))}
         </div>
+        ) : null}
         
         {posts?.length > 0 && (
           <MotionDiv

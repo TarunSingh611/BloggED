@@ -1,166 +1,38 @@
-// app/api/content/[id]/route.ts
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 export const runtime = 'nodejs'
+
 import { NextRequest, NextResponse } from 'next/server'
-import { getContentById, updateContent, deleteContent } from '@/lib/db/content'
-import { attachTagsSnapshot } from '@/lib/db/analytics'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { getContentById } from '@/lib/db/content'
+import { CmsError } from '@/lib/cms'
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const post = await getContentById(params.id)
-    
     if (!post) {
-      return NextResponse.json(
-        { error: 'Post not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 })
     }
-
     return NextResponse.json(post)
   } catch (error) {
-    console.error('Error fetching post:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch post' },
-      { status: 500 }
-    )
+    const status = error instanceof CmsError ? error.status : 502
+    const message = error instanceof Error ? error.message : 'Failed to fetch post'
+    return NextResponse.json({ error: message }, { status })
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    const body = await request.json()
-    const { title, description, content, excerpt, coverImage, published, featured } = body
-
-    if (!title || !content) {
-      return NextResponse.json(
-        { error: 'Title and content are required' },
-        { status: 400 }
-      )
-    }
-
-    // Check if the post exists and user has permission
-    const existingPost = await getContentById(params.id)
-    if (!existingPost) {
-      return NextResponse.json(
-        { error: 'Post not found' },
-        { status: 404 }
-      )
-    }
-
-    // Get the user ID from the session
-    const user = await getUserByEmail(session.user.email)
-    if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      )
-    }
-
-    // Check if user is the author or an admin
-    if (existingPost.authorId !== user.id && user.role !== 'ADMIN') {
-      return NextResponse.json(
-        { error: 'Unauthorized to edit this post' },
-        { status: 403 }
-      )
-    }
-
-    const updatedPost = await updateContent(params.id, {
-      title,
-      description,
-      content,
-      excerpt,
-      coverImage,
-      published,
-      featured
-    })
-    // record tags snapshot for analytics if tags present
-    if (Array.isArray(body?.tags) && body.tags.length > 0) {
-      await attachTagsSnapshot(params.id, body.tags)
-    }
-    return NextResponse.json(updatedPost)
-  } catch (error) {
-    console.error('Error updating post:', error)
-    return NextResponse.json(
-      { error: 'Failed to update post' },
-      { status: 500 }
-    )
-  }
+export async function PUT() {
+  return NextResponse.json(
+    { error: 'Edit this story in the Content Studio.' },
+    { status: 403 }
+  )
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    // Check if the post exists and user has permission
-    const existingPost = await getContentById(params.id)
-    if (!existingPost) {
-      return NextResponse.json(
-        { error: 'Post not found' },
-        { status: 404 }
-      )
-    }
-
-    // Get the user ID from the session
-    const user = await getUserByEmail(session.user.email)
-    if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      )
-    }
-
-    // Check if user is the author or an admin
-    if (existingPost.authorId !== user.id && user.role !== 'ADMIN') {
-      return NextResponse.json(
-        { error: 'Unauthorized to delete this post' },
-        { status: 403 }
-      )
-    }
-
-    await deleteContent(params.id)
-
-    return NextResponse.json({ message: 'Post deleted successfully' })
-  } catch (error) {
-    console.error('Error deleting post:', error)
-    return NextResponse.json(
-      { error: 'Failed to delete post' },
-      { status: 500 }
-    )
-  }
+export async function DELETE() {
+  return NextResponse.json(
+    { error: 'Delete this story in the Content Studio.' },
+    { status: 403 }
+  )
 }
-
-// Helper function to get user by email
-async function getUserByEmail(email: string) {
-  const { prisma } = await import('@/lib/prisma')
-  return prisma.user.findUnique({
-    where: { email }
-  })
-} 

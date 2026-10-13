@@ -1,51 +1,22 @@
 export const dynamic = 'force-dynamic'
-export const revalidate = 0
 export const runtime = 'nodejs'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { CmsError, createPublishedComment, fetchPublishedComments } from '@/lib/cms'
+import { plainText } from '@/lib/text'
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    // Fetch all comments for this content and build a threaded tree
-    const all = await prisma.comment.findMany({
-      where: { contentId: params.id },
-      orderBy: { createdAt: 'asc' },
-      include: { user: { select: { id: true, name: true, image: true } } },
-    })
-
-    type C = typeof all[number] & { replies?: any[] }
-    const idToNode = new Map<string, C>()
-    const roots: C[] = []
-    all.forEach((c) => idToNode.set(c.id, { ...c, replies: [] }))
-    idToNode.forEach((c) => {
-      if ((c as any).parentId) {
-        const parent = idToNode.get((c as any).parentId as unknown as string)
-        if (parent) parent.replies!.push(c)
-        else roots.push(c) // orphan safety
-      } else {
-        roots.push(c)
-      }
-    })
-    // Sort roots desc by createdAt, replies asc by createdAt
-    roots.sort((a, b) => (b.createdAt as any) - (a.createdAt as any))
-    const sortReplies = (node: C) => {
-      if (node.replies && node.replies.length) {
-        node.replies.sort((a, b) => (a.createdAt as any) - (b.createdAt as any))
-        node.replies.forEach(sortReplies as any)
-      }
-    }
-    roots.forEach(sortReplies)
-
-    return NextResponse.json(roots)
+    const comments = await fetchPublishedComments(params.id)
+    return NextResponse.json(comments)
   } catch (error) {
-    console.error('Error fetching comments:', error)
-    return NextResponse.json({ error: 'Failed to fetch comments' }, { status: 500 })
+    const status = error instanceof CmsError ? error.status : 502
+    return NextResponse.json({ error: 'Failed to fetch comments' }, { status })
   }
 }
 
@@ -56,36 +27,33 @@ export async function POST(
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.email) {
-      // instruct client to redirect
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers: { 'x-require-auth': 'true' } as any })
-    }
-    const user = await prisma.user.findUnique({ where: { email: session.user.email } })
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-    const { text, parentId } = await request.json()
-    if (!text || !text.trim()) {
-      return NextResponse.json({ error: 'Comment text required' }, { status: 400 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const comment = await prisma.comment.create({
-      data: { text: text.trim(), contentId: params.id, userId: user.id, ...(parentId ? { parentId } : {}) },
-      include: {
-        user: { select: { id: true, name: true, image: true } },
-        replies: {
-          orderBy: { createdAt: 'asc' },
-          include: { user: { select: { id: true, name: true, image: true } } },
-        },
-      },
-    })
-    await prisma.content.update({
-      where: { id: params.id },
-      data: { comments: { increment: 1 } },
+    let body: unknown
+    try {
+      body = await request.json()
+    } catch {
+      return NextResponse.json({ error: 'Malformed JSON' }, { status: 400 })
+    }
+
+    const raw = (body && typeof body === 'object' ? body : {}) as Record<string, unknown>
+    const text = plainText(raw.text, 2000)
+    if (!text) {
+      return NextResponse.json({ error: 'Comment text is required' }, { status: 400 })
+    }
+
+    const authorName = plainText(session.user.name, 80)
+    const comment = await createPublishedComment(params.id, {
+      text,
+      authorName: authorName.length >= 2 ? authorName : 'Reader',
+      authorEmail: session.user.email,
+      parentId: typeof raw.parentId === 'string' ? raw.parentId : undefined,
     })
     return NextResponse.json(comment)
   } catch (error) {
-    console.error('Error creating comment:', error)
-    return NextResponse.json({ error: 'Failed to create comment' }, { status: 500 })
+    const status = error instanceof CmsError ? error.status : 502
+    const message = error instanceof Error ? error.message : 'Failed to create comment'
+    return NextResponse.json({ error: message }, { status })
   }
 }
-
-

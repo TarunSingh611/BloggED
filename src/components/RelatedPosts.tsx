@@ -47,7 +47,7 @@ export default function RelatedPosts({ currentPostId, posts }: RelatedPostsProps
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className="card p-6 hover:shadow-lg transition-shadow"
           >
-            <Link href={`/blog/${post.id}`} className="block">
+            <Link href={`/blog/${'slug' in post && post.slug ? post.slug : post.id}`} className="block">
               {post.coverImage && (
                 <div className="relative h-32 mb-4 overflow-hidden rounded-lg">
                   <img

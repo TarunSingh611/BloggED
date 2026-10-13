@@ -126,6 +126,12 @@ model PasswordResetToken {
   user      User     @relation(fields: [userId], references: [id])
 }
 
+model Subscriber {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
 /// Aggregated, compact analytics per content per day, plus optional light samples
 model AnalyticsDaily {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId

@@ -7,25 +7,32 @@ export default function Newsletter() {
   const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
 
+    setError('')
     setIsSubmitting(true)
     try {
-      // Simulate newsletter subscription
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}))
+        throw new Error(payload.error || 'Subscription failed')
+      }
       setSubmitted(true)
       setEmail('')
     } catch (error) {
-      console.error('Error subscribing:', error)
+      setError(error instanceof Error ? error.message : 'Subscription failed')
     } finally {
       setIsSubmitting(false)
     }
   }
-  return null
-
   if (submitted) {
     return (
       <MotionDiv
@@ -40,7 +47,7 @@ export default function Newsletter() {
         </div>
         <h3 className="heading-3 text-lg mb-2">Successfully subscribed!</h3>
         <p className="text-gray-600 dark:text-gray-400">
-          Thank you for subscribing to our newsletter. You'll receive updates about new articles and insights.
+          Thank you. This address is saved for new-story updates.
         </p>
       </MotionDiv>
     )
@@ -71,6 +78,7 @@ export default function Newsletter() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
+              aria-label="Email address"
               required
               className="input flex-1"
             />
@@ -82,6 +90,9 @@ export default function Newsletter() {
               {isSubmitting ? 'Subscribing...' : 'Subscribe'}
             </button>
           </div>
+          {error && (
+            <p className="mt-3 text-sm text-red-600" role="alert">{error}</p>
+          )}
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
             We respect your privacy. Unsubscribe at any time.
           </p>

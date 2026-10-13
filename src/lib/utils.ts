@@ -19,6 +19,10 @@ export function formatReadingTime(minutes: number): string {
   return `${minutes} min read`
 }
 
+export function postHref(post: { id: string; slug?: string | null }) {
+  return `/blog/${post.slug || post.id}`
+}
+
 export function formatDate(date: Date | string): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date
   return dateObj.toLocaleDateString('en-US', {

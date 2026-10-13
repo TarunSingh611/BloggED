@@ -4,7 +4,7 @@
 import { BlogPost } from '@/type/blog';
 import Image from 'next/image';
 import Link from 'next/link';
-import { formatDate } from '@/lib/utils';
+import { formatDate, postHref } from '@/lib/utils';
 import { MotionDiv as Motion } from '@/components/motion';
 
 interface BlogCardProps {
@@ -18,7 +18,7 @@ export function BlogCard({ post }: BlogCardProps) {
       transition={{ duration: 0.2 }}
       className="card card-hover group h-full flex flex-col"
     >
-      <Link href={`/blog/${post?.id}`} className="flex-1 flex flex-col">
+      <Link href={postHref(post)} className="flex-1 flex flex-col">
         {post.coverImage && (
           <div className="relative h-48 w-full overflow-hidden rounded-t-xl">
             <Image
