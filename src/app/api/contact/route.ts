@@ -42,11 +42,11 @@ export async function POST(request: Request) {
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_SERVER,
-      port: Number(process.env.EMAIL_PORT || 465),
-      secure: process.env.EMAIL_PORT !== '587',
+      port: Number(process.env.EMAIL_PORT || 587),
+      secure: false,
       auth: {
         user: process.env.EMAIL_ADDRESS,
-        pass: process.env.EMAIL_PASSWORD,
+        pass: (process.env.EMAIL_PASSWORD || '').replace(/\s+/g, ''),
       },
     })
 

@@ -17,10 +17,13 @@ export async function POST(request: Request) {
     await prisma.passwordResetToken.create({ data: { userId: user.id, token, expiresAt: expires } })
 
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_SERVER,
-      port: 465,
-      secure: true,
-      auth: { user: process.env.EMAIL_ADDRESS, pass: process.env.EMAIL_PASSWORD },
+      host: process.env.EMAIL_SERVER || 'smtp.gmail.com',
+      port: Number(process.env.EMAIL_PORT || 587),
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_ADDRESS,
+        pass: (process.env.EMAIL_PASSWORD || '').replace(/\s+/g, ''),
+      },
     })
     const resetUrl = `${process.env.NEXTAUTH_URL || ''}/auth/reset?token=${token}${callbackUrl ? `&callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`
     await transporter.sendMail({
